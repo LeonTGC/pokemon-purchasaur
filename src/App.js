@@ -1,7 +1,21 @@
 import { useEffect, useState } from "react";
+import Modal from "react-modal";
 import Card from "./components/Card";
+import Basket from "./components/Basket";
 import "./App.css";
 import { getData } from "./utils/getData";
+import Content from "./components/Content";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 const App = () => {
   const [error, setError] = useState(false);
@@ -10,6 +24,7 @@ const App = () => {
   const [basket, setBasket] = useState([]);
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/?limit=10");
+  const [total, setTotal] = useState(0);
 
   const handleFetch = async () => {
     setLoading(true);
@@ -36,9 +51,20 @@ const App = () => {
     setBasket(newBasket);
   };
 
+  let basketTotal = () => {
+    let newBasket = 0;
+    basket.map((pokemon) => {
+      newBasket += parseInt(pokemon.price);
+    });
+    setTotal(newBasket);
+  };
   useEffect(() => {
     handleFetch();
   }, []);
+
+  useEffect(() => {
+    basketTotal();
+  }, [basket]);
 
   useEffect(() => {
     handleFetch();
@@ -50,30 +76,35 @@ const App = () => {
     return <p>loading...</p>;
   } else {
     return (
-      <div className="appWrapper">
+      <div id="app">
         <header>
-          <h1>purchase pokemon</h1>
-          <div></div>
+          <div id="headerTextWrapper">
+            <h1>Pokemon Purchasaur</h1>
+          </div>
+          <div id="basketWrapper">
+            <button onClick={() => setOpen(true)}>basket</button>
+          </div>
         </header>
-        <div>
-          {data.results.map((pokemon, index) => {
-            return (
-              <Card
-                key={index}
-                pokemon={pokemon}
-                addPokemon={() => handleBasketAdd(index)}
-              />
-            );
-          })}
-          <button
-            onClick={() => setUrl(data.previous !== null ? data.previous : url)}
-          >
-            prev
-          </button>
-          <button onClick={() => setUrl(data.next !== null ? data.next : url)}>
-            next
-          </button>
-        </div>
+        <Content
+          url={url}
+          data={data}
+          setUrl={setUrl}
+          handleBasketAdd={handleBasketAdd}
+        />
+        <Modal
+          ariaHideApp={false}
+          style={customStyles}
+          isOpen={open}
+          onRequestClose={() => setOpen(false)}
+          center
+        >
+          <Basket
+            key="basket"
+            total={total}
+            basket={basket}
+            removePokemon={handleRemove}
+          />
+        </Modal>
       </div>
     );
   }
