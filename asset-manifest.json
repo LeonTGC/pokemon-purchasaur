@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/pokemon-purchasaur/static/css/main.85feb005.css",
+    "main.js": "/pokemon-purchasaur/static/js/main.85703855.js",
+    "index.html": "/pokemon-purchasaur/index.html",
+    "main.85feb005.css.map": "/pokemon-purchasaur/static/css/main.85feb005.css.map",
+    "main.85703855.js.map": "/pokemon-purchasaur/static/js/main.85703855.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.85feb005.css",
+    "static/js/main.85703855.js"
+  ]
+}
